@@ -5,7 +5,12 @@
     <p>{{ $event->description }}</p>
     <div class="d-flex">
         <a class="btn btn-success modif" href="{{ route('events.edit', $event) }}">Modifier </a><br>
-        <form action="{{ route('events.destroy', $event) }}" method="POST" class="formShow">
+        <form 
+            action="{{ route('events.destroy', $event) }}" 
+            method="POST" 
+            class="formShow"
+            onsubmit = "return confirm('Êtes-vous sûr ?')"
+        >
             {{ csrf_field() }}
             {{ method_field('DELETE') }}
             <input type="submit" value="Supprimer" class="btn btn-danger">

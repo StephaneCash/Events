@@ -2,32 +2,34 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\CreateEvent;
+use App\Http\Requests\UpdateEvent;
 use App\Models\Events;
-use Illuminate\Http\Request;
+use MercurySeries\Flashy\Flashy;
 
 class EventsController extends Controller
 {
 
     public function index()
     {
-        $events = Events::all();
+        $events = Events::simplePaginate(5);
         return view('events.index', compact('events'));
 
     }
 
     public function create()
     {
-        return view('events.create');
+        $event = new Events;
+        return view('events.create', compact('event'));
     }
 
-    public function store(Request $request)
+    public function store(CreateEvent $request)
     {
-        $this->validate($request, [
-            'title' => 'required|min:3',
-            'description' => 'required|min:5',
-        ]);
 
         Events::create(['title' => $request->title, 'description' => $request->description]);
+
+        Flashy('notification.message', 'Evenement créé avec succès');
+        Flashy('Evenement créé avec succès', 'success');
 
         return redirect()->route('home');
     }
@@ -45,16 +47,14 @@ class EventsController extends Controller
         return view('events.edit', compact('event'));
     }
 
-    public function update(Request $request, $id)
+    public function update(UpdateEvent $request, $id)
     {
-        $this->validate($request, [
-            'title' => 'required|min:3',
-            'description' => 'required|min:5',
-        ]);
-
         $event = Events::findOrFail($id);
 
         $event->update(['title' => $request->title, 'description' => $request->description]);
+
+        Flashy('notification.message', 'Evénement # ' . $event->id . ' modifié avec succès');
+        Flashy('Evenement modifié avec succès', 'success');
 
         return redirect()->route('events.show', $id);
     }
@@ -62,6 +62,9 @@ class EventsController extends Controller
     public function destroy($id)
     {
         Events::destroy($id);
+
+        Flashy::error('notification.message', 'Evénement supprimé avec succès');
+        Flashy::error('Evénement supprimé avec succès', 'danger');
 
         return redirect()->route("home");
     }
