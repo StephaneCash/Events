@@ -35,6 +35,9 @@
 
     <script src="//code.jquery.com/jquery.js "> </script>
     @include('flashy::message')
+    <footer style='margin-top: 70.5vh; text-align: center; color:grey'>
+        &copy; by Stéphane Kikoni | 2019
+    </footer>
 </body>
 
 </html>
